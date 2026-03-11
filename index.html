@@ -21,7 +21,7 @@ input{padding:8px;width:100%;margin-top:10px}
 <body>
 
 <div class="container" id="loginPage">
-<h1>School Voting Login</h1>
+<h1>School best past leader Voting Login</h1>
 <input type="text" id="studentId" placeholder="Enter Student ID" />
 <button class="vote" onclick="loginStudent()">Enter Voting</button>
 
@@ -36,22 +36,22 @@ input{padding:8px;width:100%;margin-top:10px}
 <div class="timer" id="timer"></div>
 
 <div class="candidate">
-<span>Asha Mohamed (Head Prefect 2023)</span>
-<input type="radio" name="leader" value="Asha Mohamed">
+<span>Eunice Zambi (Head Prefect 2025-2026)</span>
+<input type="radio" name="leader" value="Eunice zambi">
 </div>
 
 <div class="candidate">
-<span>John Michael (Deputy Head Prefect 2022)</span>
-<input type="radio" name="leader" value="John Michael">
+<span>Farhat Awadhi (Deputy Head Prefect 2025-2026)</span>
+<input type="radio" name="leader" value="Farhat Awadhi">
 </div>
 
 <div class="candidate">
-<span>Neema Joseph (Academic Prefect 2023)</span>
+<span>Jennifer Sanga (Academic Prefect 2025-2026)</span>
 <input type="radio" name="leader" value="Neema Joseph">
 </div>
 
 <div class="candidate">
-<span>Peter Daniel (Sports Prefect 2022)</span>
+<span>Janeth Juliano (General secretary 2025-2026)</span>
 <input type="radio" name="leader" value="Peter Daniel">
 </div>
 
@@ -81,10 +81,10 @@ deadline.setMinutes(deadline.getMinutes()+30)
 let votedStudents=JSON.parse(localStorage.getItem("votedStudents"))||[]
 
 let votes=JSON.parse(localStorage.getItem("votes"))||{
-"Asha Mohamed":0,
-"John Michael":0,
-"Neema Joseph":0,
-"Peter Daniel":0
+"Eunice Zambi":0,
+"Farhat Awadhi":0,
+"Jennifer Sanga":0,
+"Janeth Juliano":0
 }
 
 let currentStudent=""
@@ -211,4 +211,5 @@ setInterval(updateTimer,1000)
 
 </body>
 </html>
+
 
