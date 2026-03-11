@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>School Online Voting System</title>
+<style>
+body{font-family:Arial;background:#eef2f7;margin:0}
+.container{max-width:800px;margin:40px auto;background:white;padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+h1,h2{text-align:center}
+button{padding:8px 16px;border:none;border-radius:6px;cursor:pointer}
+.vote{background:#2d89ef;color:white}
+.admin{background:#444;color:white}
+.candidate{border:1px solid #ddd;padding:10px;border-radius:8px;margin:10px 0;display:flex;justify-content:space-between}
+input{padding:8px;width:100%;margin-top:10px}
+.hidden{display:none}
+.timer{text-align:center;font-weight:bold;margin-bottom:15px}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="loginPage">
+<h1>School Voting Login</h1>
+<input type="text" id="studentId" placeholder="Enter Student ID" />
+<button class="vote" onclick="loginStudent()">Enter Voting</button>
+
+<hr>
+<h2>Teacher Admin</h2>
+<input type="password" id="adminPass" placeholder="Admin Password" />
+<button class="admin" onclick="loginAdmin()">Open Dashboard</button>
+</div>
+
+<div class="container hidden" id="votePage">
+<h1>Vote Best Past Leader</h1>
+<div class="timer" id="timer"></div>
+
+<div class="candidate">
+<span>Asha Mohamed (Head Prefect 2023)</span>
+<input type="radio" name="leader" value="Asha Mohamed">
+</div>
+
+<div class="candidate">
+<span>John Michael (Deputy Head Prefect 2022)</span>
+<input type="radio" name="leader" value="John Michael">
+</div>
+
+<div class="candidate">
+<span>Neema Joseph (Academic Prefect 2023)</span>
+<input type="radio" name="leader" value="Neema Joseph">
+</div>
+
+<div class="candidate">
+<span>Peter Daniel (Sports Prefect 2022)</span>
+<input type="radio" name="leader" value="Peter Daniel">
+</div>
+
+<button class="vote" onclick="submitVote()">Submit Vote</button>
+<p id="voteMsg"></p>
+</div>
+
+<div class="container hidden" id="adminPage">
+<h1>Teacher Admin Dashboard</h1>
+
+<h2>Voting Results</h2>
+<ul id="results"></ul>
+
+<h2>Winner</h2>
+<p id="winner"></p>
+
+<button class="admin" onclick="resetVotes()">Reset Election</button>
+</div>
+
+<script>
+
+let adminPassword="teacher123"
+
+let deadline=new Date()
+deadline.setMinutes(deadline.getMinutes()+30)
+
+let votedStudents=JSON.parse(localStorage.getItem("votedStudents"))||[]
+
+let votes=JSON.parse(localStorage.getItem("votes"))||{
+"Asha Mohamed":0,
+"John Michael":0,
+"Neema Joseph":0,
+"Peter Daniel":0
+}
+
+let currentStudent=""
+
+function loginStudent(){
+
+let id=document.getElementById("studentId").value
+
+if(!id){
+alert("Enter student ID")
+return
+}
+
+if(votedStudents.includes(id)){
+alert("You already voted")
+return
+}
+
+currentStudent=id
+
+document.getElementById("loginPage").classList.add("hidden")
+document.getElementById("votePage").classList.remove("hidden")
+
+}
+
+function loginAdmin(){
+
+let pass=document.getElementById("adminPass").value
+
+if(pass!==adminPassword){
+alert("Wrong password")
+return
+}
+
+document.getElementById("loginPage").classList.add("hidden")
+document.getElementById("adminPage").classList.remove("hidden")
+showResults()
+
+}
+
+function submitVote(){
+
+if(new Date()>deadline){
+alert("Voting time finished")
+return
+}
+
+let options=document.getElementsByName("leader")
+let selected=""
+
+for(let o of options){
+if(o.checked)selected=o.value
+}
+
+if(!selected){
+alert("Select a candidate")
+return
+}
+
+votes[selected]++
+votedStudents.push(currentStudent)
+
+localStorage.setItem("votes",JSON.stringify(votes))
+localStorage.setItem("votedStudents",JSON.stringify(votedStudents))
+
+document.getElementById("voteMsg").innerText="Vote submitted successfully"
+
+}
+
+function showResults(){
+
+let list=document.getElementById("results")
+list.innerHTML=""
+
+let winner=""
+let max=0
+
+for(let c in votes){
+
+let li=document.createElement("li")
+li.textContent=c+" : "+votes[c]+" votes"
+list.appendChild(li)
+
+if(votes[c]>max){
+max=votes[c]
+winner=c
+}
+
+}
+
+document.getElementById("winner").innerText=winner
+
+}
+
+function resetVotes(){
+
+localStorage.removeItem("votes")
+localStorage.removeItem("votedStudents")
+location.reload()
+
+}
+
+function updateTimer(){
+
+let now=new Date()
+let diff=deadline-now
+
+if(diff<=0){
+
+document.getElementById("timer").innerText="Voting closed"
+return
+}
+
+let minutes=Math.floor(diff/60000)
+let seconds=Math.floor((diff%60000)/1000)
+
+document.getElementById("timer").innerText="Voting ends in "+minutes+"m "+seconds+"s"
+
+}
+
+setInterval(updateTimer,1000)
+
+</script>
+
+</body>
+</html>
